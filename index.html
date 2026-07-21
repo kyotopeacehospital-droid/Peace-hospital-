@@ -278,6 +278,7 @@
       <ul>
         <li><a href="#services">Services</a></li>
         <li><a href="#portal">Patient Records</a></li>
+        <li><a href="#" id="staffLoginLink">Staff Login</a></li>
         <li><a href="#about">About</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
@@ -364,7 +365,7 @@
   <div class="section-head">
     <div class="eyebrow">Our approach</div>
     <h2>Why "Peace"</h2>
-    <p>The hospital's — 平和 (heiwa),  peace — reflects : patients heal faster in an environment built around calm, not just clinical efficiency. Every department is designed to reduce the friction and anxiety that usually come with hospital visits, from a records system that respects privacy, to a physical space that feels more like a retreat than a waiting room.</p>
+    <p>The hospital's name — 平和 (heiwa), meaning peace — reflects a simple idea: patients heal faster in an environment built around calm, not just clinical efficiency. Every department is designed to reduce the friction and anxiety that usually come with hospital visits, from a records system that respects privacy, to a physical space that feels more like a retreat than a waiting room.</p>
   </div>
 </section>
 
@@ -376,8 +377,7 @@
     </div>
     <div>
       <h4>Contact</h4>
-      <p><a href="mailto:contact@heiwabyoin.jp">contact@heiwabyoin.jp</a></p>
-      <p>+81 75 551 2915</p>
+      <p><a href="mailto:kyotopeacehospital@gmail.com">kyotopeacehospital@gmail.com</a></p>
     </div>
     <div>
       <h4>Hours</h4>
@@ -394,9 +394,9 @@
 <script>
   // Sample patient dataset used for the search/unlock demo
   const patients = [
-    { en:"Tristan McCauley", cn:"特里斯坦·麦考利", code:"2915ToU", age:37, admitted:"18 Jul 2021", diagnosis:"Stage II hypertension with early left ventricular hypertrophy; under monitoring and medication management." },
+    { en:"Tristan McCauley", cn:"特里斯坦·麦考利", code:"2915ToU", age:49, admitted:"18 Jul 2026", diagnosis:"Stage II hypertension with early left ventricular hypertrophy; under monitoring and medication management." },
     { en:"Sarah Chen", cn:"陈莎拉", code:"4471SaC", age:29, admitted:"03 Feb 2024", diagnosis:"Post-operative recovery, appendectomy. Stable, discharged with follow-up scheduled." },
-    { en:"Steven Okafor", cn:"史蒂文·奥卡福", code:"3382StO", age:45, admitted:"18 july 2026", diagnosis:"Type 2 diabetes, ongoing management and dietary consultation." },
+    { en:"Steven ", cn:"史蒂文·奥卡福", code:"3382StO", age:45, admitted:"22 Nov 2023", diagnosis:"Type 2 diabetes, ongoing management and dietary consultation." },
     { en:"Samuel Li", cn:"李伟", code:"5190SaL", age:52, admitted:"14 May 2022", diagnosis:"Chronic lower back pain, orthopedic physiotherapy in progress." },
     { en:"Aiko Tanaka", cn:"田中爱子", code:"6027AiT", age:33, admitted:"09 Sep 2023", diagnosis:"Routine prenatal care, second trimester, no complications noted." },
     { en:"Wei Zhang", cn:"张伟", code:"7714WeZ", age:61, admitted:"30 Jan 2025", diagnosis:"Atrial fibrillation, on anticoagulant therapy, cardiology follow-up monthly." },
@@ -457,4 +457,166 @@
       if(!q){
         results = patients;
       } else if(isLetter){
-        results = patients.filter(p => p.en.toLowerCase().startsWith(q.toLowerCase()) || p.cn.
+        results = patients.filter(p => p.en.toLowerCase().startsWith(q.toLowerCase()) || p.cn.startsWith(query));
+      } else {
+        results = patients.filter(p =>
+          p.en.toLowerCase().includes(q) ||
+          p.cn.includes(query) ||
+          p.code.toLowerCase().includes(q)
+        );
+      }
+      renderResults(results);
+    }, 650); // fake loader delay
+  }
+
+  searchBtn.addEventListener('click', ()=>{
+    document.querySelectorAll('.alpha-row button').forEach(x=>x.classList.remove('active'));
+    runSearch(searchInput.value, false);
+  });
+  searchInput.addEventListener('keydown', (e)=>{
+    if(e.key === 'Enter'){ searchBtn.click(); }
+  });
+
+  // Modal
+  const overlay = document.getElementById('modalOverlay');
+  const modalContent = document.getElementById('modalContent');
+
+  function openVerify(p){
+    modalContent.innerHTML = `
+      <div class="modal-head">
+        <div></div>
+        <button class="modal-close" id="closeModal" aria-label="Close">×</button>
+      </div>
+      <div class="verify-box">
+        <div class="lock-icon">🔒</div>
+        <h3>Enter patient code</h3>
+        <p>To view ${p.en}'s full record, enter the patient code provided to authorized staff only.</p>
+        <div style="position:relative; margin-bottom:12px;">
+          <input type="password" id="codeInput" placeholder="Input patient code" maxlength="10">
+          <button type="button" id="toggleCode" style="position:absolute; right:12px; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; font-size:13px; color:var(--ink-soft);">Show</button>
+        </div>
+        <div class="verify-error" id="verifyError"></div>
+        <button class="btn btn-primary" id="verifyBtn">Unlock record</button>
+      </div>
+    `;
+    overlay.classList.add('open');
+    document.getElementById('closeModal').addEventListener('click', closeModal);
+
+    const codeInput = document.getElementById('codeInput');
+    const verifyBtn = document.getElementById('verifyBtn');
+    const verifyError = document.getElementById('verifyError');
+    const toggleCode = document.getElementById('toggleCode');
+
+    toggleCode.addEventListener('click', ()=>{
+      const isPassword = codeInput.type === 'password';
+      codeInput.type = isPassword ? 'text' : 'password';
+      toggleCode.textContent = isPassword ? 'Hide' : 'Show';
+    });
+
+    function attemptUnlock(){
+      const entered = codeInput.value.trim();
+      verifyBtn.innerHTML = `<span class="spinner" style="width:16px;height:16px;border-width:2px;border-color:rgba(255,255,255,0.35);border-top-color:white;"></span> Verifying…`;
+      verifyBtn.disabled = true;
+      setTimeout(()=>{
+        if(entered.toLowerCase() === p.code.toLowerCase()){
+          openDetails(p);
+        }else{
+          verifyError.textContent = "Incorrect code. Access denied.";
+          verifyBtn.innerHTML = "Unlock record";
+          verifyBtn.disabled = false;
+        }
+      }, 700);
+    }
+    verifyBtn.addEventListener('click', attemptUnlock);
+    codeInput.addEventListener('keydown', (e)=>{ if(e.key === 'Enter') attemptUnlock(); });
+    codeInput.focus();
+  }
+
+  function openDetails(p){
+    modalContent.innerHTML = `
+      <div class="modal-head">
+        <div>
+          <h3>${p.en}</h3>
+          <div class="cn cjk">${p.cn}</div>
+        </div>
+        <button class="modal-close" id="closeModal" aria-label="Close">×</button>
+      </div>
+      <div class="modal-code">Patient code: ${p.code}</div>
+      <div class="modal-grid">
+        <div class="modal-field">
+          <div class="label">Age</div>
+          <div class="value">${p.age} years</div>
+        </div>
+        <div class="modal-field">
+          <div class="label">Admitted</div>
+          <div class="value">${p.admitted}</div>
+        </div>
+      </div>
+      <div class="modal-field" style="margin-bottom:8px;">
+        <div class="label">Diagnosis</div>
+      </div>
+      <div class="modal-diagnosis">${p.diagnosis}</div>
+    `;
+    document.getElementById('closeModal').addEventListener('click', closeModal);
+  }
+  function closeModal(){ overlay.classList.remove('open'); }
+  overlay.addEventListener('click', (e)=>{ if(e.target === overlay) closeModal(); });
+
+  // Staff login (demo — always shows incorrect credentials)
+  document.getElementById('staffLoginLink').addEventListener('click', (e)=>{
+    e.preventDefault();
+    openStaffLogin();
+  });
+
+  function openStaffLogin(){
+    modalContent.innerHTML = `
+      <div class="modal-head">
+        <div></div>
+        <button class="modal-close" id="closeModal" aria-label="Close">×</button>
+      </div>
+      <div class="verify-box">
+        <div class="lock-icon">🔒</div>
+        <h3>Staff Login</h3>
+        <p>Sign in with your hospital staff credentials.</p>
+        <input type="text" id="staffUser" placeholder="Staff ID" style="margin-bottom:12px;">
+        <div style="position:relative; margin-bottom:12px;">
+          <input type="password" id="staffPass" placeholder="Password">
+        </div>
+        <div class="verify-error" id="loginError"></div>
+        <button class="btn btn-primary" id="loginBtn">Sign in</button>
+      </div>
+    `;
+    overlay.classList.add('open');
+    document.getElementById('closeModal').addEventListener('click', closeModal);
+
+    const loginBtn = document.getElementById('loginBtn');
+    const loginError = document.getElementById('loginError');
+
+    function attemptLogin(){
+      loginBtn.innerHTML = `<span class="spinner" style="width:16px;height:16px;border-width:2px;border-color:rgba(255,255,255,0.35);border-top-color:white;"></span> Signing in…`;
+      loginBtn.disabled = true;
+      setTimeout(()=>{
+        loginError.textContent = "Incorrect credentials. Please try again.";
+        loginBtn.innerHTML = "Sign in";
+        loginBtn.disabled = false;
+      }, 800);
+    }
+    loginBtn.addEventListener('click', attemptLogin);
+    document.getElementById('staffPass').addEventListener('keydown', (e)=>{ if(e.key === 'Enter') attemptLogin(); });
+  }
+
+  document.getElementById('bookBtn').addEventListener('click', function(){
+    const btn = this;
+    const original = btn.innerHTML;
+    btn.innerHTML = `<span class="spinner" style="width:16px;height:16px;border-width:2px;border-color:rgba(255,255,255,0.35);border-top-color:white;"></span> Loading…`;
+    btn.disabled = true;
+    setTimeout(()=>{
+      btn.innerHTML = original;
+      btn.disabled = false;
+      window.location.href = "mailto:kyotopeacehospital@gmail.com?subject=Appointment%20Request&body=Name%3A%0APreferred%20date%2Ftime%3A%0AReason%20for%20visit%3A";
+    }, 900);
+  });
+</script>
+
+</body>
+</html>
