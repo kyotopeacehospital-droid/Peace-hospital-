@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>平和専門病院 · Peace Specialty Hospital</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Noto+Sans+SC:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --teal-deep:#2F4858;
+    --teal:#4C7A78;
+    --sage:#9CB3AA;
+    --gold:#D98B93;
+    --paper:#F7F4F1;
+    --ink:#2E3438;
+    --ink-soft:#5F6A6C;
+    --line:#E3DCD6;
+    --white:#FFFFFF;
+    --radius:14px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.display{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    letter-spacing:-0.01em;
+    color:var(--teal-deep);
+  }
+  .cjk{ font-family:'Noto Sans SC', sans-serif; }
+  a{color:inherit;}
+  :focus-visible{
+    outline:3px solid var(--gold);
+    outline-offset:2px;
+  }
+
+  /* ---------- Header ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(247,250,249,0.92);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-wrap{
+    max-width:1180px; margin:0 auto; padding:16px 28px;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .brand{ display:flex; align-items:center; gap:12px; }
+  .brand-mark{
+    width:38px; height:38px; border-radius:50%;
+    background:conic-gradient(from 180deg, var(--teal) 0deg, var(--sage) 180deg, var(--teal) 360deg);
+    display:flex; align-items:center; justify-content:center;
+    color:white; font-family:'Fraunces',serif; font-weight:600; font-size:15px;
+  }
+  .brand-text{ line-height:1.15; }
+  .brand-text .en{ font-family:'Fraunces',serif; font-weight:600; font-size:16.5px; color:var(--teal-deep); }
+  .brand-text .jp{ font-size:11.5px; color:var(--ink-soft); letter-spacing:0.04em; }
+  nav ul{ display:flex; gap:30px; list-style:none; margin:0; padding:0; }
+  nav a{
+    text-decoration:none; font-size:14.5px; font-weight:500; color:var(--ink-soft);
+    padding:6px 2px; border-bottom:2px solid transparent; transition:.2s;
+  }
+  nav a:hover{ color:var(--teal-deep); border-color:var(--gold); }
+  .lang-toggle{
+    display:flex; border:1px solid var(--line); border-radius:100px; overflow:hidden; font-size:13px;
+  }
+  .lang-toggle button{
+    border:none; background:transparent; padding:7px 14px; cursor:pointer; font-weight:600;
+    color:var(--ink-soft); font-family:inherit;
+  }
+  .lang-toggle button.active{ background:var(--teal); color:white; }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    max-width:1180px; margin:0 auto; padding:88px 28px 70px;
+    display:grid; grid-template-columns:1.1fr 0.9fr; gap:48px; align-items:center;
+  }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-size:12.5px; letter-spacing:0.12em; text-transform:uppercase;
+    color:var(--teal); font-weight:600; margin-bottom:18px;
+  }
+  .eyebrow::before{ content:''; width:22px; height:1px; background:var(--gold); }
+  .hero h1{ font-size:clamp(34px,4.6vw,54px); line-height:1.08; margin:0 0 20px; }
+  .hero p.lede{ font-size:17px; line-height:1.65; color:var(--ink-soft); max-width:46ch; margin-bottom:32px; }
+  .cta-row{ display:flex; gap:14px; flex-wrap:wrap; }
+  .btn{
+    font-family:'Inter',sans-serif; font-weight:600; font-size:14.5px;
+    padding:14px 26px; border-radius:100px; border:none; cursor:pointer;
+    display:inline-flex; align-items:center; gap:10px; transition:.2s transform, .2s box-shadow;
+  }
+  .btn-primary{ background:var(--teal-deep); color:white; }
+  .btn-primary:hover{ transform:translateY(-2px); box-shadow:0 10px 24px rgba(27,94,99,0.25); }
+  .btn-ghost{ background:transparent; color:var(--teal-deep); border:1.5px solid var(--line); }
+  .btn-ghost:hover{ border-color:var(--teal); }
+
+  .hero-visual{
+    position:relative; height:400px; border-radius:24px; overflow:hidden;
+    background:linear-gradient(160deg, var(--teal) 0%, var(--teal-deep) 60%, #133F43 100%);
+  }
+  .ripple{
+    position:absolute; border-radius:50%; border:1px solid rgba(255,255,255,0.25);
+    animation:expand 6s ease-out infinite;
+  }
+  .ripple:nth-child(1){ width:60px; height:60px; left:50%; top:60%; animation-delay:0s;}
+  .ripple:nth-child(2){ width:60px; height:60px; left:50%; top:60%; animation-delay:2s;}
+  .ripple:nth-child(3){ width:60px; height:60px; left:50%; top:60%; animation-delay:4s;}
+  @keyframes expand{
+    0%{ width:20px; height:20px; opacity:0.9; transform:translate(-50%,-50%);}
+    100%{ width:520px; height:520px; opacity:0; transform:translate(-50%,-50%);}
+  }
+  .hero-visual .kanji{
+    position:absolute; bottom:28px; left:28px; color:rgba(255,255,255,0.9);
+    font-family:'Noto Sans SC',sans-serif; font-size:15px; letter-spacing:0.05em;
+  }
+  .hero-visual .kanji strong{ display:block; font-size:26px; font-weight:600; margin-bottom:4px;}
+
+  /* ---------- Sections ---------- */
+  section{ max-width:1180px; margin:0 auto; padding:70px 28px; }
+  .section-head{ margin-bottom:40px; max-width:60ch; }
+  .section-head .eyebrow{ margin-bottom:12px; }
+  .section-head h2{ font-size:32px; margin:0 0 10px; }
+  .section-head p{ color:var(--ink-soft); font-size:15.5px; line-height:1.6; margin:0;}
+
+  .services-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:20px; }
+  .service-card{
+    background:white; border:1px solid var(--line); border-radius:var(--radius);
+    padding:26px 22px; transition:.25s;
+  }
+  .service-card:hover{ box-shadow:0 12px 28px rgba(27,94,99,0.08); transform:translateY(-3px); border-color:var(--sage);}
+  .service-card .icon{
+    width:42px; height:42px; border-radius:10px; background:#EDE6E3;
+    display:flex; align-items:center; justify-content:center; margin-bottom:16px;
+    color:var(--teal); font-size:20px;
+  }
+  .service-card h3{ font-size:16.5px; margin:0 0 8px; color:var(--teal-deep); }
+  .service-card p{ font-size:13.5px; color:var(--ink-soft); line-height:1.55; margin:0; }
+
+  /* ---------- Patient Portal ---------- */
+  .portal{
+    background:linear-gradient(180deg, #F1E9E8 0%, var(--paper) 100%);
+    border-radius:28px; padding:60px 44px;
+  }
+  .portal-top{ display:flex; justify-content:space-between; align-items:flex-end; gap:20px; flex-wrap:wrap; margin-bottom:28px;}
+  .privacy-note{
+    display:flex; gap:10px; align-items:flex-start; background:#FFF8ED; border:1px solid #EFDDB2;
+    border-radius:10px; padding:12px 16px; font-size:12.5px; color:#6B5A2E; max-width:420px; line-height:1.5;
+  }
+  .search-bar{
+    display:flex; gap:10px; background:white; border:1.5px solid var(--line); border-radius:100px;
+    padding:8px 8px 8px 20px; margin-bottom:22px; align-items:center;
+  }
+  .search-bar input{
+    flex:1; border:none; outline:none; font-size:15px; font-family:inherit; color:var(--ink); background:transparent;
+  }
+  .search-bar input::placeholder{ color:#9FB0AE; }
+  .search-bar button{
+    background:var(--teal-deep); color:white; border:none; border-radius:100px;
+    padding:11px 22px; font-weight:600; font-size:14px; cursor:pointer; display:flex; align-items:center; gap:8px;
+  }
+  .alpha-row{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom:26px; }
+  .alpha-row button{
+    width:30px; height:30px; border-radius:8px; border:1px solid var(--line); background:white;
+    font-size:12.5px; font-weight:600; color:var(--ink-soft); cursor:pointer; transition:.15s;
+  }
+  .alpha-row button:hover, .alpha-row button.active{ background:var(--teal); color:white; border-color:var(--teal); }
+
+  #resultsArea{ min-height:80px; }
+  .loader{
+    display:flex; align-items:center; gap:12px; color:var(--teal-deep); font-size:14px; font-weight:500;
+    padding:20px 4px;
+  }
+  .spinner{
+    width:20px; height:20px; border-radius:50%; border:3px solid #D6E8E4; border-top-color:var(--teal);
+    animation:spin .8s linear infinite;
+  }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+
+  .patient-list{ display:grid; gap:12px; }
+  .patient-row{
+    background:white; border:1px solid var(--line); border-radius:12px; padding:16px 20px;
+    display:flex; justify-content:space-between; align-items:center; cursor:pointer; transition:.2s;
+  }
+  .patient-row:hover{ border-color:var(--sage); box-shadow:0 6px 18px rgba(27,94,99,0.06); }
+  .patient-row .names{ display:flex; flex-direction:column; gap:2px; }
+  .patient-row .names .en{ font-weight:600; color:var(--teal-deep); font-size:15px; }
+  .patient-row .names .cn{ font-size:13px; color:var(--ink-soft); }
+  .patient-row .lock{
+    font-size:13px; color:var(--ink-soft); display:flex; align-items:center; gap:6px;
+  }
+  .no-results{ color:var(--ink-soft); font-size:14px; padding:18px 4px; }
+
+  /* Code verification step */
+  .verify-box{ text-align:center; }
+  .verify-box .lock-icon{
+    width:52px; height:52px; border-radius:50%; background:#EDE6E3; color:var(--teal-deep);
+    display:flex; align-items:center; justify-content:center; font-size:22px; margin:0 auto 18px;
+  }
+  .verify-box h3{ margin:0 0 6px; font-size:19px; }
+  .verify-box p{ color:var(--ink-soft); font-size:13.5px; line-height:1.55; margin:0 0 20px; }
+  .verify-box input{
+    width:100%; text-align:center; letter-spacing:0.08em; font-family:monospace; font-size:16px;
+    padding:13px 60px 13px 13px; border:1.5px solid var(--line); border-radius:10px; outline:none;
+    box-sizing:border-box;
+  }
+  .verify-box input:focus{ border-color:var(--teal); }
+  .verify-error{ color:#B0453D; font-size:13px; margin-bottom:12px; min-height:18px; }
+  .verify-box .btn-primary{ width:100%; justify-content:center; }
+
+  /* Modal */
+  .modal-overlay{
+    position:fixed; inset:0; background:rgba(27,42,42,0.45); display:none;
+    align-items:center; justify-content:center; z-index:100; padding:20px;
+  }
+  .modal-overlay.open{ display:flex; }
+  .modal{
+    background:white; border-radius:20px; max-width:460px; width:100%; padding:32px;
+    box-shadow:0 30px 60px rgba(0,0,0,0.25);
+  }
+  .modal-head{ display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:18px; }
+  .modal-head h3{ margin:0 0 4px; font-size:20px; }
+  .modal-head .cn{ color:var(--ink-soft); font-size:14px; }
+  .modal-close{ background:none; border:none; font-size:22px; cursor:pointer; color:var(--ink-soft); line-height:1; }
+  .modal-code{
+    display:inline-block; font-family:monospace; background:#EDE6E3; color:var(--teal-deep);
+    padding:6px 12px; border-radius:8px; font-size:13.5px; margin-bottom:18px;
+  }
+  .modal-grid{ display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:18px; }
+  .modal-field{ }
+  .modal-field .label{ font-size:11.5px; text-transform:uppercase; letter-spacing:0.06em; color:var(--ink-soft); margin-bottom:4px; }
+  .modal-field .value{ font-size:14.5px; font-weight:600; color:var(--ink); }
+  .modal-diagnosis{
+    background:var(--paper); border:1px solid var(--line); border-radius:10px; padding:14px 16px; font-size:14px; color:var(--ink-soft); line-height:1.55;
+  }
+  .modal-footnote{ font-size:11.5px; color:#B08A2E; margin-top:16px; display:flex; gap:6px; }
+
+  /* ---------- Footer ---------- */
+  footer{
+    background:var(--teal-deep); color:#DCEDEA; padding:50px 28px 30px; margin-top:40px;
+  }
+  .footer-wrap{ max-width:1180px; margin:0 auto; display:grid; grid-template-columns:1.3fr 1fr 1fr; gap:40px; }
+  footer h4{ color:white; font-size:14px; margin:0 0 14px; font-family:'Fraunces',serif; }
+  footer p, footer a{ font-size:13.5px; color:#B9D6D1; line-height:1.8; text-decoration:none; }
+  footer a:hover{ color:white; }
+  .footer-bottom{
+    max-width:1180px; margin:36px auto 0; padding-top:20px; border-top:1px solid rgba(255,255,255,0.12);
+    font-size:12px; color:#8FB5AF;
+  }
+
+  @media (max-width:860px){
+    .hero{ grid-template-columns:1fr; }
+    nav ul{ display:none; }
+    .services-grid{ grid-template-columns:repeat(2,1fr); }
+    .footer-wrap{ grid-template-columns:1fr; }
+    .modal-grid{ grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav-wrap">
+    <div class="brand">
+      <div class="brand-mark">和</div>
+      <div class="brand-text">
+        <div class="en">Peace Specialty Hospital</div>
+        <div class="jp cjk">平和専門病院</div>
+      </div>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#portal">Patient Records</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="lang-toggle" role="group" aria-label="Language">
+      <button class="active" type="button">EN</button>
+      <button type="button" class="cjk">中文</button>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div>
+    <div class="eyebrow">Kyoto · Specialist Care</div>
+    <h1>Calm, precise care —<br>built around the patient.</h1>
+    <p class="lede">Peace Specialty Hospital brings focused, specialist-led treatment to Kyoto, paired with a records system designed for speed and discretion.</p>
+    <div class="cta-row">
+      <button class="btn btn-primary" id="bookBtn">Book an appointment →</button>
+      <a href="#portal"><button class="btn btn-ghost">View patient portal</button></a>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="ripple"></div>
+    <div class="ripple"></div>
+    <div class="ripple"></div>
+    <div class="kanji cjk"><strong>平和</strong>peace, by design</div>
+  </div>
+</section>
+
+<section id="services">
+  <div class="section-head">
+    <div class="eyebrow">What we treat</div>
+    <h2>Specialties</h2>
+    <p>Four core departments, each staffed by specialists rather than generalists.</p>
+  </div>
+  <div class="services-grid">
+    <div class="service-card">
+      <div class="icon">♡</div>
+      <h3>Cardiology</h3>
+      <p>Diagnostics and long-term care for heart and vascular conditions.</p>
+    </div>
+    <div class="service-card">
+      <div class="icon">◐</div>
+      <h3>Internal Medicine</h3>
+      <p>Ongoing management of chronic and complex conditions.</p>
+    </div>
+    <div class="service-card">
+      <div class="icon">✦</div>
+      <h3>Orthopedics</h3>
+      <p>Joint, spine, and sports-related injury treatment.</p>
+    </div>
+    <div class="service-card">
+      <div class="icon">⌘</div>
+      <h3>Diagnostics Lab</h3>
+      <p>Same-day imaging and lab results for referring physicians.</p>
+    </div>
+  </div>
+</section>
+
+<section id="portal">
+  <div class="portal">
+    <div class="portal-top">
+      <div class="section-head" style="margin-bottom:0;">
+        <div class="eyebrow">Staff access</div>
+        <h2>Patient Records</h2>
+        <p>Search by name to locate a patient, then enter their code to view the file.</p>
+      </div>
+    </div>
+
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Search patient name (English or 中文)…">
+      <button id="searchBtn">Search</button>
+    </div>
+
+    <div class="alpha-row" id="alphaRow"></div>
+
+    <div id="resultsArea">
+      <p class="no-results">Search a name, or tap a letter above to browse.</p>
+    </div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="section-head">
+    <div class="eyebrow">Our approach</div>
+    <h2>Why "Peace"</h2>
+    <p>The hospital's — 平和 (heiwa),  peace — reflects : patients heal faster in an environment built around calm, not just clinical efficiency. Every department is designed to reduce the friction and anxiety that usually come with hospital visits, from a records system that respects privacy, to a physical space that feels more like a retreat than a waiting room.</p>
+  </div>
+</section>
+
+<footer id="contact">
+  <div class="footer-wrap">
+    <div>
+      <h4>Peace Specialty Hospital 平和専門病院</h4>
+      <p>4-2 Heiwa-dori, Higashiyama Ward<br>Kyoto, Japan 605-0001</p>
+    </div>
+    <div>
+      <h4>Contact</h4>
+      <p><a href="mailto:contact@heiwabyoin.jp">contact@heiwabyoin.jp</a></p>
+      <p>+81 75 551 2915</p>
+    </div>
+    <div>
+      <h4>Hours</h4>
+      <p>Mon – Sat: 8:00 – 20:00<br>Emergency: 24 / 7</p>
+    </div>
+  </div>
+  <div class="footer-bottom">© 2026 Peace Specialty Hospital. All rights reserved.</div>
+</footer>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modalContent"></div>
+</div>
+
+<script>
+  // Sample patient dataset used for the search/unlock demo
+  const patients = [
+    { en:"Tristan McCauley", cn:"特里斯坦·麦考利", code:"2915ToU", age:37, admitted:"18 Jul 2021", diagnosis:"Stage II hypertension with early left ventricular hypertrophy; under monitoring and medication management." },
+    { en:"Sarah Chen", cn:"陈莎拉", code:"4471SaC", age:29, admitted:"03 Feb 2024", diagnosis:"Post-operative recovery, appendectomy. Stable, discharged with follow-up scheduled." },
+    { en:"Steven Okafor", cn:"史蒂文·奥卡福", code:"3382StO", age:45, admitted:"18 july 2026", diagnosis:"Type 2 diabetes, ongoing management and dietary consultation." },
+    { en:"Samuel Li", cn:"李伟", code:"5190SaL", age:52, admitted:"14 May 2022", diagnosis:"Chronic lower back pain, orthopedic physiotherapy in progress." },
+    { en:"Aiko Tanaka", cn:"田中爱子", code:"6027AiT", age:33, admitted:"09 Sep 2023", diagnosis:"Routine prenatal care, second trimester, no complications noted." },
+    { en:"Wei Zhang", cn:"张伟", code:"7714WeZ", age:61, admitted:"30 Jan 2025", diagnosis:"Atrial fibrillation, on anticoagulant therapy, cardiology follow-up monthly." },
+    { en:"Mei Lin", cn:"林梅", code:"2856MeL", age:26, admitted:"11 Dec 2024", diagnosis:"Minor fracture, right wrist, cast applied, healing on schedule." },
+    { en:"Daniel Osei", cn:"丹尼尔·奥塞", code:"9043DaO", age:40, admitted:"05 Jun 2023", diagnosis:"Seasonal asthma flare-up, prescribed inhaler adjustment." },
+    { en:"David Kim", cn:"戴维·金", code:"1129DaK", age:48, admitted:"19 Mar 2024", diagnosis:"Annual specialist check-up, internal medicine, no acute issues." },
+    { en:"Grace Wang", cn:"王芳", code:"3350GrW", age:31, admitted:"27 Aug 2023", diagnosis:"Migraine management, neurology referral completed." }
+  ];
+
+  const alphaRow = document.getElementById('alphaRow');
+  "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split('').forEach(letter=>{
+    const b = document.createElement('button');
+    b.textContent = letter;
+    b.addEventListener('click', ()=>{
+      document.querySelectorAll('.alpha-row button').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');
+      runSearch(letter, true);
+    });
+    alphaRow.appendChild(b);
+  });
+
+  const resultsArea = document.getElementById('resultsArea');
+  const searchInput = document.getElementById('searchInput');
+  const searchBtn = document.getElementById('searchBtn');
+
+  function showLoader(){
+    resultsArea.innerHTML = `<div class="loader"><div class="spinner"></div> Searching records…</div>`;
+  }
+
+  function renderResults(list){
+    if(list.length === 0){
+      resultsArea.innerHTML = `<p class="no-results">No matching patients found.</p>`;
+      return;
+    }
+    const rows = list.map((p, i) => `
+      <div class="patient-row" data-idx="${i}">
+        <div class="names">
+          <span class="en">${p.en}</span>
+          <span class="cn cjk">${p.cn}</span>
+        </div>
+        <span class="lock">🔒 Code required</span>
+      </div>
+    `).join('');
+    resultsArea.innerHTML = `<div class="patient-list">${rows}</div>`;
+
+    resultsArea.querySelectorAll('.patient-row').forEach((row, i)=>{
+      row.addEventListener('click', ()=>{
+        openVerify(list[i]);
+      });
+    });
+  }
+
+  function runSearch(query, isLetter){
+    showLoader();
+    setTimeout(()=>{
+      const q = query.trim().toLowerCase();
+      let results;
+      if(!q){
+        results = patients;
+      } else if(isLetter){
+        results = patients.filter(p => p.en.toLowerCase().startsWith(q.toLowerCase()) || p.cn.
